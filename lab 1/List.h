@@ -21,7 +21,6 @@ private:
 		~Iterator();
 		T& operator* ();
 		Iterator& operator++();
-		Iterator& operator++(int);
 		bool operator ==(const Iterator&);
 		bool operator !=(const Iterator&);
 		
@@ -32,6 +31,9 @@ private:
 	Node * _begin;
 	Node * _dummy;
 	size_t _size; 
+
+	mutable size_t _iterations;
+
 	friend class Node;
 	friend class Iterator;
 public:
@@ -51,6 +53,8 @@ public:
 	void remove(const size_t);
 	Iterator& begin();
 	Iterator& end();
+	void print() const;
+	size_t getLastOperatorIterations();
 };
 
 template<class T>
@@ -96,14 +100,6 @@ typename List<T>::Iterator& List<T>::Iterator::operator++()
 }
 
 template<class T>
-typename List<T>::Iterator& List<T>::Iterator::operator++(int)
-{
-	Iterator tmp(current);
-	++(*this);
-	return tmp;
-}
-
-template<class T>
 bool List<T>::Iterator::operator==(const Iterator& second)
 {
 	return this->current == second.current;
@@ -121,13 +117,19 @@ List<T>::List()
 	_dummy = nullptr;
 	_size = 0;
 	_begin = nullptr;
+	_iterations = 0;
 }
 
 template<class T>
 List<T>::List(const List& list)
 {
 	clear();
-
+	if (list.size() == 0) return;
+	Node* tmp = list._begin;
+	while (tmp != list._dummy) {
+		insert(tmp->element);
+		tmp = tmp->next;
+	}
 }
 
 template<class T>
@@ -160,10 +162,12 @@ bool List<T>::isEmpty() const
 template<class T>
 bool List<T>::contains(const T& el) const
 {
+	_iterations = 0;
 	Node* tmp = _begin;
 	while (tmp != _dummy) {
 		if (tmp->element == el) return true;
 		tmp = tmp->next;
+		_iterations++;
 	}
 	return false;
 }
@@ -221,6 +225,7 @@ void List<T>::insert(const T& el)
 template<class T>
 void List<T>::insert(const T& el, size_t pos)
 {
+	_iterations = 0;
 	if (pos > _size) throw "error";
 	if (pos == 1) {
 		Node* tmp = new Node(el);
@@ -230,7 +235,10 @@ void List<T>::insert(const T& el, size_t pos)
 	}
 	else {
 		Node* tmp = _dummy;
-		for (size_t i = 1; i < pos; i++) tmp = tmp->next;
+		for (size_t i = 1; i < pos; i++) {
+			tmp = tmp->next;
+			_iterations++;
+		}
 		Node* newNode = new Node(el);
 		newNode->next = tmp->next;
 		tmp->next = newNode;
@@ -260,6 +268,7 @@ void List<T>::remove(const T& el)
 template<class T>
 void List<T>::remove(const size_t pos)
 {
+	_iterations = 0;
 	if (pos > _size || pos == 0) throw "error";
 	if (pos == 1) {
 		_dummy->next = _begin->next;
@@ -269,7 +278,10 @@ void List<T>::remove(const size_t pos)
 	}
 	else {
 		Node* tmp = _dummy;
-		for (int i = 1; i < pos; i++) tmp = tmp->next;
+		for (int i = 1; i < pos; i++) {
+			tmp = tmp->next;
+			_iterations++;
+		}
 		tmp->next = tmp->next->next;
 		tmp->next->next = nullptr;
 		delete tmp->next;
@@ -287,4 +299,20 @@ template<class T>
 typename List<T>::Iterator& List<T>::end()
 {
 	return *(new Iterator(_dummy));
+}
+
+template<class T>
+void List<T>::print() const
+{
+	Node* tmp = _begin;
+	while (tmp != _dummy) {
+		std::cout << tmp->element << " ";
+		tmp = tmp->next;
+	}
+}
+
+template<class T>
+size_t List<T>::getLastOperatorIterations()
+{
+	return _iterations;
 }

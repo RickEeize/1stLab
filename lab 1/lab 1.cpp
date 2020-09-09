@@ -12,7 +12,5 @@ int main()
     for (int i = 0; i < 5; i++) {
         l1.insert(i);
     }
-    for (auto it = l1.begin(); it != l1.end(); it++) {
-        cout << *it;
-    }
+    
 }
