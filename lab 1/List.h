@@ -147,8 +147,9 @@ size_t List<T>::size() const
 template<class T>
 void List<T>::clear()
 {
+	if (!(_dummy && _begin)) return;
 	_dummy->next = nullptr;
-	if (_begin) delete _begin;
+	delete _begin;
 
 	_size = 0;
 }
@@ -177,7 +178,7 @@ T List<T>::get(const size_t pos) const
 {
 	if (pos > _size) throw "error";
 	Node* tmp = _begin;
-	for (int i = 1; i < pos; i++) tmp = tmp->next;
+	for (size_t i = 1; i < pos; i++) tmp = tmp->next;
 	return tmp->element;
 }
 
@@ -186,7 +187,7 @@ void List<T>::change(const T& el, const size_t pos)
 {
 	if (pos > _size) throw "error";
 	Node* tmp = _begin;
-	for (int i = 1; i < pos; i++) tmp = tmp->next;
+	for (size_t i = 1; i < pos; i++) tmp = tmp->next;
 	tmp->element = el;
 }
 
@@ -196,7 +197,7 @@ size_t List<T>::position(const T& el)
 	size_t pos = 1;
 	Node* tmp = _begin;
 	while (tmp != _dummy) {
-		if (tmp->element = el) return pos;
+		if (tmp->element == el) return pos;
 		tmp = tmp->next;
 		pos++;
 	}
@@ -309,6 +310,7 @@ void List<T>::print() const
 		std::cout << tmp->element << " ";
 		tmp = tmp->next;
 	}
+	std::cout << std::endl;
 }
 
 template<class T>

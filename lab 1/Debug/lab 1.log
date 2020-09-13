@@ -1,2 +1,6 @@
 ﻿  lab 1.cpp
+C:\Users\user\source\repos\algorithms\lab 1\lab 1\List.h(282,21): warning C4018: <: несоответствие типов со знаком и без знака
+C:\Users\user\source\repos\algorithms\lab 1\lab 1\List.h(271): message : во время компиляции функции-члена класс шаблон "void List<std::string>::remove(const size_t)"
+C:\Users\user\source\repos\algorithms\lab 1\lab 1\lab 1.cpp(59): message : выполняется компиляция ссылки на экземпляр шаблон функции "void List<std::string>::remove(const size_t)"
+C:\Users\user\source\repos\algorithms\lab 1\lab 1\lab 1.cpp(13): message : выполняется компиляция ссылки на экземпляр класс шаблон функции "List<std::string>"
   lab 1.vcxproj -> C:\Users\user\source\repos\algorithms\lab 1\Debug\lab 1.exe
